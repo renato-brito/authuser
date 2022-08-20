@@ -1,5 +1,6 @@
 package com.ead.authuser.dtos;
 
+import com.ead.authuser.validation.UsernameConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
@@ -23,23 +24,24 @@ public class UserDto {
     private UUID id;
 
     @NotBlank(groups = UserView.RegistrationPost.class, message = "User name is required")
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 50, groups = UserView.RegistrationPost.class)
+    @UsernameConstraint(groups = UserView.RegistrationPost.class)
     @JsonView(UserView.RegistrationPost.class)
     private String userName;
 
     @NotBlank(groups = UserView.RegistrationPost.class, message = "Email is required")
-    @Email(message = "Email is invalid")
+    @Email(groups = UserView.RegistrationPost.class, message = "Email is invalid")
     @JsonView(UserView.RegistrationPost.class)
     private String email;
 
     @NotBlank(groups = {UserView.RegistrationPost.class,UserView.PasswordPut.class},
               message = "Password is required")
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 20, groups = {UserView.RegistrationPost.class,UserView.PasswordPut.class})
     @JsonView({UserView.RegistrationPost.class,UserView.PasswordPut.class})
     private String password;
 
     @NotBlank(groups = UserView.PasswordPut.class)
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 20, groups = {UserView.RegistrationPost.class,UserView.PasswordPut.class})
     @JsonView(UserView.PasswordPut.class)
     private String oldPassword;
 
